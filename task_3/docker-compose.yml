@@ -1,0 +1,29 @@
+version: "3.7"
+networks:
+  backend:
+  frontend:
+services:
+  db:
+    image: postgres:13.3-alpine
+    networks:
+      - backend
+    env_file:
+        ./.env
+  backend:
+    build: ./lib_catalog
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - "db"
+  frontend:
+    build: ./frontend
+    networks:
+      - frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "db"
+      - "backend"
